@@ -103,8 +103,14 @@ async function storeAudio(audio: Buffer): Promise<string> {
 
 const SPEAK_DESCRIPTION =
   "Convert text to speech using a cloned ElevenLabs voice. Use this when the user asks you to say something out loud or reply with voice.\n\n" +
-  "For natural, expressive delivery: write the text the way a person would actually speak it, not like formal written prose. Use commas, ellipses (…) and em dashes for breathing pauses; keep sentences short-ish; vary rhythm. " +
-  "The default model (eleven_v3) understands inline emotion/delivery tags in square brackets placed right before the words they affect, e.g. [laughs], [sighs], [whispers], [excited], [curious], [sarcastic], [pause]. Use them sparingly where they'd naturally fit — don't overdo it.\n\n" +
+  "Before calling this tool, act as a voice-performance script transliterator: rewrite the plain text you want spoken into a script eleven_v3 can perform, not something that sounds read aloud from a page.\n\n" +
+  "Core principle: a 'living' feel comes from imperfection, not from piling on emotion. The goal is to sound like someone thinking out loud in the moment, not someone reading text that was already written.\n\n" +
+  "Required techniques:\n" +
+  "1. Real speech-flow imperfections (the most important one): self-interruption/addition with an em dash —; a thinking pause with an ellipsis … placed right before the word being weighed, not at the end of a sentence; a mid-sentence correction, e.g. \"我觉得这个…不对，应该说是\"; keep filler/connective words like 那个、就是、其实、反正 and incomplete clauses. 2-4 of these per passage is enough — more than that reads as stammering.\n" +
+  "2. Sparse emotion/delivery tags in square brackets: one every 2-4 sentences, several tag-free sentences in a row is normal and correct. Place a tag right before the sentence it affects. Only add one where the emotion actually shifts, never where it's just continuing. Never stack more than 2 tags together. Available tags — emotion: [curious] [excited] [hesitant] [sarcastic] [warm] [tired]; delivery: [whispers] [shouts] [rushed] [slowly]; reactions: [laughs] [sighs] [clears throat] [exhales]. Tags must fit the voice's character (don't give a serious voice [giggles], don't give a calm voice [shouts]).\n" +
+  "3. Design an emotional arc across the whole passage — opening, a turn partway through, and a landing — with three genuinely different emotional beats. One flat emotion the whole way through immediately reads as a machine.\n" +
+  "4. Chinese-specific emphasis (Chinese has no capitalization to lean on): broken-up emphasis like \"这个、真的、不行\"; ending particles like 啊/吧/嘛/欸/呢; repeating the key word, e.g. \"很难，是真的很难\"; short rapid-fire sentences for urgency, longer sentences to relax the pace.\n\n" +
+  "Hard constraints: the text you pass to this tool should be at least ~250 characters — v3 gets unstable on very short inputs, so if the user's original line is short, naturally expand it (more hesitation, particles, pauses) while keeping the original meaning, rather than robotically repeating it. Do not use SSML break tags — control pacing only through punctuation and sentence structure.\n\n" +
   "This returns a URL to the generated mp3 — tell the user to tap/open the link to hear it, playback does not happen automatically.";
 
 function getServer() {
