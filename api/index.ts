@@ -18,8 +18,8 @@ interface VoiceSettings {
   use_speaker_boost: boolean;
 }
 
-const MAX_ATTEMPTS = 3;
-const REQUEST_TIMEOUT_MS = 20000;
+const MAX_ATTEMPTS = 2;
+const REQUEST_TIMEOUT_MS = 120000;
 
 async function textToSpeech(
   text: string,
